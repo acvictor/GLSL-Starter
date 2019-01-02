@@ -1,5 +1,5 @@
 # Sample-GLSL
-This is a starter C++ app for GLSL.
+This is a starter C++ app for GLSL that uses OpenGL version 3.3, and Assimp for model loading.
 
 ## Requirements
 - OpenGL 3.3 and above
@@ -23,7 +23,7 @@ sudo apt-get install libassimp-dev
 ## Execution
 To compile and execute run
 ```
-g++ main.cpp src/Mesh.cpp src/Shader.cpp src/Window.cpp src/Camera.cpp src/Texture.cpp src/Light.cpp src/Material.cpp src/DirectionalLight.cpp src/PointLight.cpp src/PointLight.cpp-w -lGL -lglfw -lGLEW -o p
+g++ -std=c++11 main.cpp src/Mesh.cpp src/Shader.cpp src/Window.cpp src/Camera.cpp src/Texture.cpp src/Light.cpp src/Material.cpp src/DirectionalLight.cpp src/PointLight.cpp src/SpotLight.cpp src/Model.cpp -w -lGL -lglfw -lGLEW -lassimp -o exec
 
 ./exec
 ```
