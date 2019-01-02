@@ -1,6 +1,8 @@
 # Sample-GLSL
 This is a starter C++ app for GLSL that uses OpenGL version 3.3, and Assimp for model loading. 
 
+![alt text][https://github.com/acvictor/GLSL-Starter/images/NoShadows.png]
+
 ## Requirements
 - OpenGL 3.3 and above
 - GLEW
