@@ -79,8 +79,9 @@ void calcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloa
 	}
 }
 
-void TransformAndRender(Model* m, Material* mat, GLfloat transX, GLfloat transY, GLfloat transZ, GLfloat scale, GLfloat rotX, GLfloat rotY, GLfloat rotZ)
+void TransformAndRenderModel(Model* m, Material* mat, GLfloat transX, GLfloat transY, GLfloat transZ, GLfloat scale, GLfloat rotX, GLfloat rotY, GLfloat rotZ)
 {
+	// First translate, rotate, then scale so that it's executed as scale, rotate, translate
 	glm::mat4 model = glm::mat4();
 	model = glm::translate(model, glm::vec3(transX, transY, transZ));
 	model = glm::rotate(model, rotX * toRadians, glm::vec3(1, 0, 0));
@@ -90,6 +91,20 @@ void TransformAndRender(Model* m, Material* mat, GLfloat transX, GLfloat transY,
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	mat->UseMaterial(uniformSpecularIntensity, uniformShininess);
 	m->RenderModel();
+}
+
+void TransformAndRenderMesh(Mesh* m, Material* mat, GLfloat transX, GLfloat transY, GLfloat transZ, GLfloat scale, GLfloat rotX, GLfloat rotY, GLfloat rotZ)
+{
+	glm::mat4 model = glm::mat4();
+	model = glm::translate(model, glm::vec3(transX, transY, transZ));
+	model = glm::rotate(model, rotX * toRadians, glm::vec3(1, 0, 0));
+	model = glm::rotate(model, rotY * toRadians, glm::vec3(0, 1, 0));
+	model = glm::rotate(model, rotZ * toRadians, glm::vec3(0, 0, 1));
+	model = glm::scale(model, glm::vec3(scale, scale, scale));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	marbleTexture.UseTexture();
+	mat->UseMaterial(uniformSpecularIntensity, uniformShininess);
+	m->RenderMesh();
 }
 
 void CreateObjects() 
@@ -132,8 +147,6 @@ void CreateObjects()
 		-10.0f, 10.0f, -10.0f, 0.0f, 1.0f,	0.0f, 0.0f, -1.0f,
 		 10.0f, 10.0f, -10.0f, 1.0f, 1.0f,	0.0f, 0.0f, -1.0f
 	};
-
-
 
 	calcAverageNormals(indices, 12, vertices, 32, 8, 5);
 
@@ -284,76 +297,29 @@ int main()
 
 		glm::mat4 model;	
 
-		// First translate, rotate, then scale so that it's executed as scale, rotate, translate
-		/*model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
-		//model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		brickTexture.UseTexture();
-		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		meshList[0]->RenderMesh();
+		TransformAndRenderMesh(meshList[2], &dullMaterial, 0.0f, -2.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
+		TransformAndRenderMesh(meshList[2], &dullMaterial, 0.0f, 8.0f, 0.0f, 1.0f, 180.0f, 0.0f, 0.0f);
+		TransformAndRenderMesh(meshList[3], &dullMaterial, 0.0f, -2.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
+		TransformAndRenderMesh(meshList[3], &dullMaterial, 0.0f, -2.0f, 0.0f, 1.0f, 0.0f, -90.0f, 0.0f);
+		TransformAndRenderMesh(meshList[3], &dullMaterial, 0.0f, -2.0f, 0.0f, 1.0f, 0.0f, 90.0f, 0.0f);
 
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.5f));
-		//model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		meshList[1]->RenderMesh();*/
+		TransformAndRenderModel(&rook, &shinyMaterial, 3.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&knight, &shinyMaterial, 2.5f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&bishop, &shinyMaterial, 2.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&queen, &shinyMaterial, -2.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&king, &shinyMaterial, 2.5f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&bishop, &shinyMaterial, -6.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&knight, &shinyMaterial, -10.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&rook, &shinyMaterial, -14.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
 
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		marbleTexture.UseTexture();
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		meshList[2]->RenderMesh();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(0.0f, 8.0f, 0.0f));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(1, 0, 0));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		marbleTexture.UseTexture();
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		meshList[2]->RenderMesh();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		marbleTexture.UseTexture();
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		meshList[3]->RenderMesh();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(0, 1, 0));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		marbleTexture.UseTexture();
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		meshList[3]->RenderMesh();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-		model = glm::rotate(model, 90.f * toRadians, glm::vec3(0, 1, 0));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		marbleTexture.UseTexture();
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		meshList[3]->RenderMesh();
-
-		TransformAndRender(&rook, &shinyMaterial, 3.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-		TransformAndRender(&knight, &shinyMaterial, 2.5f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-		TransformAndRender(&bishop, &shinyMaterial, 2.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-		TransformAndRender(&queen, &shinyMaterial, -2.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-		TransformAndRender(&king, &shinyMaterial, 2.5f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-		TransformAndRender(&bishop, &shinyMaterial, -6.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-		TransformAndRender(&knight, &shinyMaterial, -10.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-		TransformAndRender(&rook, &shinyMaterial, -14.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-
-		TransformAndRender(&pawn, &shinyMaterial, 3.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
-		TransformAndRender(&pawn, &shinyMaterial, 1.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
-		TransformAndRender(&pawn, &shinyMaterial, -1.5f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
-		TransformAndRender(&pawn, &shinyMaterial, -4.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);	
-		TransformAndRender(&pawn, &shinyMaterial, -6.7f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
-		TransformAndRender(&pawn, &shinyMaterial, -9.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
-		TransformAndRender(&pawn, &shinyMaterial, -11.5f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
-		TransformAndRender(&pawn, &shinyMaterial, -14.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&pawn, &shinyMaterial, 3.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&pawn, &shinyMaterial, 1.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&pawn, &shinyMaterial, -1.5f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&pawn, &shinyMaterial, -4.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);	
+		TransformAndRenderModel(&pawn, &shinyMaterial, -6.7f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&pawn, &shinyMaterial, -9.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&pawn, &shinyMaterial, -11.5f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRenderModel(&pawn, &shinyMaterial, -14.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
 
 		glUseProgram(0);
 
