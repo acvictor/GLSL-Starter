@@ -33,11 +33,8 @@ std::vector<Shader> shaderList;
 Camera camera;
 
 Texture brickTexture;
-Texture dirtTexture;
+Texture marbleTexture;
 Texture plainTexture;
-
-Material shinyMaterial;
-Material dullMaterial;
 
 DirectionalLight mainLight;
 PointLight pointLights[MAX_POINT_LIGHTS];
@@ -45,6 +42,8 @@ SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
+
+GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0, uniformSpecularIntensity = 0, uniformShininess = 0;
 
 // Vertex Shader
 static const char* vShader = "shaders/shader.vert";
@@ -78,6 +77,19 @@ void calcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloa
 		vec = glm::normalize(vec);
 		vertices[nOffset] = vec.x; vertices[nOffset + 1] = vec.y; vertices[nOffset + 2] = vec.z;
 	}
+}
+
+void TransformAndRender(Model* m, Material* mat, GLfloat transX, GLfloat transY, GLfloat transZ, GLfloat scale, GLfloat rotX, GLfloat rotY, GLfloat rotZ)
+{
+	glm::mat4 model = glm::mat4();
+	model = glm::translate(model, glm::vec3(transX, transY, transZ));
+	model = glm::rotate(model, rotX * toRadians, glm::vec3(1, 0, 0));
+	model = glm::rotate(model, rotY * toRadians, glm::vec3(0, 1, 0));
+	model = glm::rotate(model, rotZ * toRadians, glm::vec3(0, 0, 1));
+	model = glm::scale(model, glm::vec3(scale, scale, scale));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	mat->UseMaterial(uniformSpecularIntensity, uniformShininess);
+	m->RenderModel();
 }
 
 void CreateObjects() 
@@ -159,12 +171,14 @@ int main()
 
 	Model bishop, king, queen, rook, knight, pawn;
 
+	Material shinyMaterial, dullMaterial;	
+
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.5f);
 
 	brickTexture = Texture("textures/brick.png");
 	brickTexture.LoadTextureAlpha();
-	dirtTexture = Texture("textures/marble.jpg");
-	dirtTexture.LoadTexture();
+	marbleTexture = Texture("textures/marble.jpg");
+	marbleTexture.LoadTexture();
 	plainTexture = Texture("textures/plain.png");
 	plainTexture.LoadTextureAlpha();
 
@@ -198,12 +212,12 @@ int main()
 								0.0f, 0.1f,
 								0.0f, 0.0f, 0.0f,
 								0.3f, 0.2f, 0.1f);
-	//pointLightCount++;
+	pointLightCount++;
 	pointLights[1] = PointLight(1.0f, 1.0f, 0.8f,
 								0.0f, 0.1f,
 								-4.0f, 2.0f, 0.0f,
 								0.3f, 0.1f, 0.1f);
-	//pointLightCount++;
+	pointLightCount++;
 
 	unsigned int spotLightCount = 0;
 	spotLights[0] = SpotLight(1.0f, 1.0f, .8f,
@@ -228,8 +242,6 @@ int main()
 							  30.0f);
 	spotLightCount++;
 
-	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
-		uniformSpecularIntensity = 0, uniformShininess = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 100.0f);
 
 
@@ -290,22 +302,22 @@ int main()
 		model = glm::mat4();
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dirtTexture.UseTexture();
-		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		marbleTexture.UseTexture();
+		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[2]->RenderMesh();
 
 		model = glm::mat4();
 		model = glm::translate(model, glm::vec3(0.0f, 8.0f, 0.0f));
 		model = glm::rotate(model, 180.f * toRadians, glm::vec3(1, 0, 0));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dirtTexture.UseTexture();
-		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		marbleTexture.UseTexture();
+		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[2]->RenderMesh();
 
 		model = glm::mat4();
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dirtTexture.UseTexture();
+		marbleTexture.UseTexture();
 		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[3]->RenderMesh();
 
@@ -313,7 +325,7 @@ int main()
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 		model = glm::rotate(model, -90.f * toRadians, glm::vec3(0, 1, 0));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dirtTexture.UseTexture();
+		marbleTexture.UseTexture();
 		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[3]->RenderMesh();
 
@@ -321,154 +333,27 @@ int main()
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
 		model = glm::rotate(model, 90.f * toRadians, glm::vec3(0, 1, 0));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dirtTexture.UseTexture();
+		marbleTexture.UseTexture();
 		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[3]->RenderMesh();
 
+		TransformAndRender(&rook, &shinyMaterial, 3.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRender(&knight, &shinyMaterial, 2.5f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRender(&bishop, &shinyMaterial, 2.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRender(&queen, &shinyMaterial, -2.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRender(&king, &shinyMaterial, 2.5f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRender(&bishop, &shinyMaterial, -6.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRender(&knight, &shinyMaterial, -10.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRender(&rook, &shinyMaterial, -14.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
 
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(2.0, -2.0f, -1.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		bishop.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(-6.0f, -2.0f, -1.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		shinyMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		bishop.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(2.5f, -2.0f, -1.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		king.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(-2.0f, -2.0f, -1.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		queen.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(3.0f, -2.0f, -1.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		rook.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(-14.0f, -2.0f, -1.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		rook.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(-10.0f, -2.0f, -1.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		knight.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(2.5f, -2.0f, -1.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		knight.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(3.0f, -2.0f, 0.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		pawn.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(1.0f, -2.0f, 0.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		pawn.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(-1.5f, -2.0f, 0.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		pawn.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(-4.0f, -2.0f, 0.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		pawn.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(-6.7f, -2.0f, 0.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		pawn.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(-9.0f, -2.0f, 0.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		pawn.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(-11.5f, -2.0f, 0.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		pawn.RenderModel();
-
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(-14.0f, -2.0f, 0.0f));
-		model = glm::rotate(model, -90.f * toRadians, glm::vec3(1, 0, 0));
-		model = glm::rotate(model, 180.f * toRadians, glm::vec3(0, 0, 1));
-		model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		dullMaterial.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		pawn.RenderModel();
+		TransformAndRender(&pawn, &shinyMaterial, 3.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRender(&pawn, &shinyMaterial, 1.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRender(&pawn, &shinyMaterial, -1.5f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRender(&pawn, &shinyMaterial, -4.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);	
+		TransformAndRender(&pawn, &shinyMaterial, -6.7f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRender(&pawn, &shinyMaterial, -9.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRender(&pawn, &shinyMaterial, -11.5f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+		TransformAndRender(&pawn, &shinyMaterial, -14.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
 
 		glUseProgram(0);
 

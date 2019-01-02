@@ -1,5 +1,5 @@
 # Sample-GLSL
-This is a starter C++ app for GLSL that uses OpenGL version 3.3, and Assimp for model loading.
+This is a starter C++ app for GLSL that uses OpenGL version 3.3, and Assimp for model loading. 
 
 ## Requirements
 - OpenGL 3.3 and above
