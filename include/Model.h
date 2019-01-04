@@ -1,6 +1,7 @@
 #pragma once
 
-#include <bits/stdc++.h>
+#include <vector>
+#include <string>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -9,12 +10,12 @@
 #include "Mesh.h"
 #include "Texture.h"
 
-class Model 
+class Model
 {
 public:
 	Model();
 
-	void LoadModel(const std::string& filename);
+	void LoadModel(const std::string& fileName);
 	void RenderModel();
 	void ClearModel();
 
@@ -22,14 +23,12 @@ public:
 
 private:
 
-	// Assimp variables, don't want scene to change
-	void LoadNode(aiNode* node, const aiScene* scene);
-	void LoadMesh(aiMesh* mesh, const aiScene* scene);
-	void LoadMaterials(const aiScene* scene);
+	void LoadNode(aiNode *node, const aiScene *scene);
+	void LoadMesh(aiMesh *mesh, const aiScene *scene);
+	void LoadMaterials(const aiScene *scene);
 
 	std::vector<Mesh*> meshList;
 	std::vector<Texture*> textureList;
-
-	// Some meshes might use same texture
 	std::vector<unsigned int> meshToTex;
 };
+
