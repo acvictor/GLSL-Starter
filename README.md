@@ -1,5 +1,5 @@
 # Sample-GLSL
-This is a starter C++ app for GLSL that uses OpenGL version 3.3, and Assimp for model loading. 
+This is a starter GLSL app written in C++. It includes directional, point and spot lights, and simulates ambient, diffuse and specular lighting.
 
 <p align="left">
   <img width="630" height="350" src="https://github.com/acvictor/GLSL-Starter/blob/master/images/NoShadows.png">
