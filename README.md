@@ -1,9 +1,11 @@
-# Sample-GLSL
-This is a starter GLSL app written in C++. It includes directional, point and spot lights, and simulates ambient, diffuse and specular lighting.
+# GLSL Starter
+This is a starter OpenGL shader application written in C++. It includes directional, point and spot lights, simulates ambient, diffuse and specular lighting as well as a shadow map. It supports 3D model loading via Assimp and texture loading via STB Image.
 
 <p align="left">
-  <img width="630" height="350" src="https://github.com/acvictor/GLSL-Starter/blob/master/images/NoShadows.png">
+<img src="https://github.com/acvictor/GLSL-Starter/blob/master/images/NoShadows.png" alt="NMPC" width="420" height="230" border="20" /></a> 
+<img src="https://github.com/acvictor/GLSL-Starter/blob/master/images/ShadowMap.png" alt="NMPC" width="420" height="230" border="20" /></a>
 </p>
+
 
 ## Requirements
 - OpenGL 3.3 and above
