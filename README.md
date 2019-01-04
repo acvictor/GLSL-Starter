@@ -1,9 +1,11 @@
 # Sample-GLSL
-This is a starter GLSL app written in C++. It includes directional, point and spot lights, and simulates ambient, diffuse and specular lighting.
+This is a starter GLSL app written in C++. It includes directional, point and spot lights, and simulates ambient, diffuse and specular lighting and a shadow map.
 
-<p align="left">
-  <img width="630" height="350" src="https://github.com/acvictor/GLSL-Starter/blob/master/images/NoShadows.png">
+<p align="center">
+<img src="https://github.com/acvictor/GLSL-Starter/blob/master/images/NoShadows.png" alt="NMPC" width="420" height="230" border="20" /></a> 
+<img src="https://github.com/acvictor/GLSL-Starter/blob/master/images/ShadowMap.png" alt="NMPC" width="420" height="230" border="20" /></a>
 </p>
+
 
 ## Requirements
 - OpenGL 3.3 and above
