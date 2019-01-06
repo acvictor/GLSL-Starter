@@ -16,6 +16,8 @@ public:
 
 	GLint getBufferWidth() { return bufferWidth; }
 	GLint getBufferHeight() { return bufferHeight; }
+	GLint getWidth() { return width; }
+	GLint getHeight() { return height; }
 
 	bool getShouldClose() { return glfwWindowShouldClose(mainWindow); }
 
@@ -44,4 +46,5 @@ private:
 	void createCallbacks();
 	static void handleKeys(GLFWwindow* window, int key, int code, int action, int mode);
 	static void handleMouse(GLFWwindow* window, double xPos, double yPos);
+	static void windowSizeCallback(GLFWwindow* window, int windowWidth, int windowHeight);
 };

@@ -69,7 +69,8 @@ float CalcDirectionalShadowFactor(DirectionalLight light)
 	
 	vec3 normal = normalize(Normal);
 	vec3 lightDir = normalize(directionalLight.direction);
-	
+
+	// Shadow acne
 	float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.0005);
 
 	

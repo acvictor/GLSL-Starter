@@ -57,7 +57,7 @@ int Window::Initialise()
 
 	// Handle Key + Mouse Input
 	createCallbacks();
-	glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 	// Allow modern extension access
 	glewExperimental = GL_TRUE;
@@ -83,6 +83,7 @@ void Window::createCallbacks()
 {
 	glfwSetKeyCallback(mainWindow, handleKeys);
 	glfwSetCursorPosCallback(mainWindow, handleMouse);
+	glfwSetWindowSizeCallback(mainWindow, windowSizeCallback);
 }
 
 GLfloat Window::getXChange()
@@ -137,6 +138,13 @@ void Window::handleMouse(GLFWwindow* window, double xPos, double yPos)
 
 	theWindow->lastX = xPos;
 	theWindow->lastY = yPos;
+}
+
+void Window::windowSizeCallback(GLFWwindow* window, int windowWidth, int windowHeight)
+{
+	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+	theWindow->width = windowWidth;
+	theWindow->height = windowHeight;
 }
 
 Window::~Window()
