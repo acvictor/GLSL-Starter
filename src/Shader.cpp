@@ -156,6 +156,8 @@ void Shader::CompileShader(const char* vertexCode, const char* fragmentCode)
 	uniformDirectionalLightTransform = glGetUniformLocation(shaderID, "directionalLightTransform");
 	uniformTexture = glGetUniformLocation(shaderID, "theTexture");
 	uniformDirectionalShadowMap = glGetUniformLocation(shaderID, "directionalShadowMap");
+
+	uniformFogColour = glGetUniformLocation(shaderID, "fogColour");
 }
 
 GLuint Shader::GetProjectionLocation()
@@ -197,6 +199,11 @@ GLuint Shader::GetShininessLocation()
 GLuint Shader::GetEyePositionLocation()
 {
 	return uniformEyePosition;
+}
+
+GLuint Shader::GetFogColourLocation()
+{
+	return uniformFogColour;
 }
 
 void Shader::SetDirectionalLight(DirectionalLight * dLight)

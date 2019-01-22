@@ -56,9 +56,24 @@ uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 uniform sampler2D theTexture;
 uniform sampler2D directionalShadowMap;
 
+uniform vec4 fogColour;
+
 uniform Material material;
 
 uniform vec3 eyePosition;
+
+float GetFogFactor(float d)
+{
+    const float FogMax = 20.0;
+    const float FogMin = 10.0;
+
+    if(d >= FogMax) 
+    	return 1.0;
+    if(d <= FogMin) 
+    	return 0.0;
+
+    return 1 - (FogMax - d) / (FogMax - FogMin);
+}
 
 float CalcDirectionalShadowFactor(DirectionalLight light)
 {
@@ -183,6 +198,11 @@ void main()
 	vec4 finalColour = CalcDirectionalLight();
 	finalColour += CalcPointLights();
 	finalColour += CalcSpotLights();
+
+	float d = distance(eyePosition, FragPos);
+    float alpha = GetFogFactor(d);
+
+    finalColour = mix(finalColour, fogColour, alpha);
 	
 	colour = texture(theTexture, TexCoord) * finalColour;
 }
