@@ -187,28 +187,28 @@ void RenderScene()
 {
 	glm::mat4 model;	
 
-	TransformAndRenderMesh(meshList[2], &dullMaterial, 0.0f, -2.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
-	TransformAndRenderMesh(meshList[3], &dullMaterial, 0.0f, -2.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
-	TransformAndRenderMesh(meshList[3], &dullMaterial, 0.0f, -2.0f, 0.0f, 1.0f, 0.0f, -90.0f, 0.0f);
-	TransformAndRenderMesh(meshList[3], &dullMaterial, 0.0f, -2.0f, 0.0f, 1.0f, 0.0f, 90.0f, 0.0f);
+	TransformAndRenderMesh(meshList[2], &dullMaterial, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
+	TransformAndRenderMesh(meshList[3], &dullMaterial, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
+	TransformAndRenderMesh(meshList[3], &dullMaterial, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, -90.0f, 0.0f);
+	TransformAndRenderMesh(meshList[3], &dullMaterial, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 90.0f, 0.0f);
 
-	TransformAndRenderModel(&rook, &shinyMaterial, 3.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-	TransformAndRenderModel(&knight, &shinyMaterial, 2.5f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-	TransformAndRenderModel(&bishop, &shinyMaterial, 2.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-	TransformAndRenderModel(&queen, &shinyMaterial, -2.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-	TransformAndRenderModel(&king, &shinyMaterial, 2.5f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-	TransformAndRenderModel(&bishop, &shinyMaterial, -6.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-	TransformAndRenderModel(&knight, &shinyMaterial, -10.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
-	TransformAndRenderModel(&rook, &shinyMaterial, -14.0f, -2.0f, -1.0f, .3f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&rook, &shinyMaterial, 8.0f, 0.0f, -5.0f, 1.0f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&knight, &shinyMaterial, 6.0f, 0.0f, -5.0f, 1.0f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&bishop, &shinyMaterial, 3.5f, 0.0f, -5.0f, 1.0f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&queen, &shinyMaterial, 1.0f, 0.0f, -5.0f, 1.0f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&king, &shinyMaterial, -1.5f, 0.0f, -5.0f, 1.0f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&bishop, &shinyMaterial, -4.0f, 0.0f, -5.0f, 1.0f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&knight, &shinyMaterial, -6.0f, 0.0f, -5.0f, 1.0f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&rook, &shinyMaterial, -8.0f, 0.0f, -5.0f, 1.0f, -90.0f, 0.0f, 180.0f);
 
-	TransformAndRenderModel(&pawn, &shinyMaterial, 3.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
-	TransformAndRenderModel(&pawn, &shinyMaterial, 1.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
-	TransformAndRenderModel(&pawn, &shinyMaterial, -1.5f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
-	TransformAndRenderModel(&pawn, &shinyMaterial, -4.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);	
-	TransformAndRenderModel(&pawn, &shinyMaterial, -6.7f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
-	TransformAndRenderModel(&pawn, &shinyMaterial, -9.0f, 0.0f, 3.0f, .3f, -90.0f, 0.0f, 180.0f);
-	TransformAndRenderModel(&pawn, &shinyMaterial, -11.5f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
-	TransformAndRenderModel(&pawn, &shinyMaterial, -14.0f, -2.0f, 0.0f, .3f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&pawn, &shinyMaterial, 8.0f, 0.0f, -3.0f, 1.0f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&pawn, &shinyMaterial, 6.0f, 0.0f, -3.0f, 1.0f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&pawn, &shinyMaterial, 3.5f, 0.0f, -3.0f, 1.0f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&pawn, &shinyMaterial, 1.0f, 0.0f, -3.0f, 1.0f, -90.0f, 0.0f, 180.0f);	
+	TransformAndRenderModel(&pawn, &shinyMaterial, -1.5f, 2.0f, -3.0f, 1.0f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&pawn, &shinyMaterial, -4.0f, 0.0f, -3.0f, 1.0f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&pawn, &shinyMaterial, -6.0f, 0.0f, -3.0f, 1.0f, -90.0f, 0.0f, 180.0f);
+	TransformAndRenderModel(&pawn, &shinyMaterial, -8.0f, 0.0f, -3.0f, 1.0f, -90.0f, 0.0f, 180.0f);
 }
 
 
@@ -278,7 +278,7 @@ int main()
 	CreateObjects();
 	CreateShaders();
 
-	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 5.0f, 0.5f);
+	camera = Camera(glm::vec3(2.0f, 2.0f, 5.0f), glm::vec3(0.0f, 1.0f, 0.0f), 600.0f, -30.0f, 5.0f, 0.5f);
 
 	brickTexture = Texture("textures/brick.png");
 	brickTexture.LoadTextureA();
