@@ -38,3 +38,12 @@ g++ -std=c++11 main.cpp src/Mesh.cpp src/Shader.cpp src/Window.cpp src/Camera.cp
 
 ./exec
 ```
+
+#### Note
+run
+```
+export LD_LIBRARY_PATH=/usr/local/lib
+```
+if you see <error while loading shared libraries: libassimp.so.4: cannot open shared object file: No such file or directory>
+
+
