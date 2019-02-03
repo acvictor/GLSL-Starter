@@ -23,7 +23,12 @@ sudo apt-get install libglfw3-dev
 sudo apt-get install libglm-dev
 git clone https://github.com/nothings/stb.git
 sudo cp stb/stb_image.h /usr/include/
-sudo apt-get install libassimp-dev
+git clone https://github.com/assimp/assimp.git
+cd assimp
+cmake CMakeLists.txt
+make -j4
+sudo make install
+export LD_LIBRARY_PATH=/usr/local/lib
 ```
 
 ## Execution

@@ -64,8 +64,8 @@ uniform vec3 eyePosition;
 
 float GetFogFactor(float d)
 {
-    const float FogMax = 20.0;
-    const float FogMin = 10.0;
+    const float FogMax = 10.0;
+    const float FogMin = .2;
 
     if(d >= FogMax) 
     	return 1.0;

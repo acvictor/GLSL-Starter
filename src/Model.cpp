@@ -22,7 +22,13 @@ void Model::RenderModel()
 void Model::LoadModel(const std::string & fileName)
 {
 	Assimp::Importer importer;
-	const aiScene *scene = importer.ReadFile(fileName, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
+	aiPropertyStore* props = aiCreatePropertyStore();
+	aiSetImportPropertyInteger(props, "PP_PTV_NORMALIZE", 1);
+	const aiScene* scene = (aiScene*)aiImportFileExWithProperties(fileName.c_str(),
+	aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_PreTransformVertices,
+    NULL,
+    props);
+	aiReleasePropertyStore(props);
 
 	if (!scene)
 	{
